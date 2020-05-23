@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+
+  web:
+    image: nginx:1.17
+    ports:
+      - 80:80
+    volumes:
+      - ../php:/var/www/site
+      - ./assets/site.conf:/etc/nginx/conf.d/site.conf
+    depends_on:
+      - php
+      - db
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile_php
+    volumes:
+      - ../php:/var/www/site
+      - ./assets:/var/assets
+      - ./assets/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.4
+    ports:
+      - 3306:3306
+    restart: always
+    command: "mysqld --init-file /data/application/init.sql"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./assets/init.sql:/data/application/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+
+volumes:
+  db-data:
