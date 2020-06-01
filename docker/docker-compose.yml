@@ -28,10 +28,9 @@ services:
     ports:
       - 3306:3306
     restart: always
-    command: "mysqld --init-file /data/application/init.sql"
     volumes:
       - db-data:/var/lib/mysql
-      - ./assets/init.sql:/data/application/init.sql
+      - ./assets/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MYSQL_ROOT_PASSWORD: qwerty
 
