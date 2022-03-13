@@ -1,0 +1,13 @@
+FROM nginx:1.21
+ 
+RUN addgroup --gid 1000 --system socketuser
+RUN adduser --uid 1000 --system --ingroup socketuser socketuser
+RUN rm /etc/nginx/nginx.conf
+ 
+RUN touch /var/run/nginx.pid \
+ && chown -Rf socketuser:socketuser \
+	/var/run/nginx.pid \
+	/var/cache/nginx \
+	/var/log/nginx
+
+USER socketuser
